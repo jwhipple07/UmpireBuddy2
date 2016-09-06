@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.javacodegeeks.android.menu.MainActivity"
+    xmlns:custom="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/reset"
+        android:icon="@mipmap/reset"
+        android:title="@string/reset_label"
+        app:showAsAction="withText|ifRoom"/>
+    <item android:id="@+id/about"
+        android:title="@string/title_activity_about"
+        app:showAsAction="never"/>
+    <item android:id="@+id/settings"
+        android:title="@string/title_activity_settings"
+        app:showAsAction="never"/>
+
+
+</menu>
