@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int strikeCountNum;
     private int ballCountNum;
     private int outsCountNum;
-    private int linearID;
+    private int linearID;  //this will be used to store the ID of what was long clicked
 
     private TextToSpeech t1;
     private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
@@ -195,19 +195,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (id) {
             case R.id.about:
                 Intent intent = new Intent(this, AboutActivity.class);
-                //intent.putExtra(EXTRA_DATA, "extra data or parameter you want to pass to activity");
-                //mActionMode = startActionMode(mActionModeCallback);
                 startActivity(intent);
-                Toast.makeText(getApplicationContext(), "About menu item pressed", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.reset:
-                Toast.makeText(getApplicationContext(), "reset menu item pressed", Toast.LENGTH_SHORT).show();
                 clearCount();
                 break;
             case R.id.settings:
                 intent = new Intent(this, SettingsActivity.class);
-                //intent.putExtra(EXTRA_DATA, "extra data or parameter you want to pass to activity");
-                //mActionMode = startActionMode(mActionModeCallback);
                 startActivity(intent);
                 break;
         }
@@ -228,33 +222,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         txtOutsCount = (TextView) findViewById(R.id.outs_counter_text);
         txtOutsCount.setText(String.valueOf(outsCountNum));
     }
+
+    /**
+     * Updates the counters based on the item clicked.
+     * @param id - The R.id element's id.
+     * @param increment - true to increment, false to decrement
+     */
     protected void updateCounter(int id, boolean increment){
         switch(id)
         {
             case R.id.strike_button:
             case R.id.strike_linearLayout:
-                if(increment)
+                if(increment && strikeCountNum < 3)
                     strikeCountNum++;   //INFO :: increase the strike count
                 else
                     strikeCountNum--;
                 if(strikeCountNum < 0)
                     strikeCountNum = 0;
                 txtStrikeCount.setText(String.valueOf(strikeCountNum));
-                if(strikeCountNum == 3){
+                if(strikeCountNum >= 3){
                     outsCountNum++; //INFO :: increase the out number.
                     actionAlert("Out!!");   //INFO :: if it was strike 3, then alert and reset
                 }
                 break;
             case R.id.ball_button:
             case R.id.ball_linearLayout:
-                if(increment)
+                if(increment && ballCountNum < 4)
                     ballCountNum++; //INFO :: increase the ball count
                 else
                     ballCountNum--;
                 if(ballCountNum < 0)
                     ballCountNum = 0;
                 txtBallCount.setText(String.valueOf(ballCountNum));
-                if(ballCountNum == 4){
+                if(ballCountNum >= 4){
                     actionAlert("Walk!!");  //INFO :: if it was ball 4, then alert and reset
                 }
                 break;
@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //INFO :: Persistent Storage update
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putInt(OUTS,outsCountNum);
+        editor.putInt(OUTS,outsCountNum); //store the outs in persistent storage
         editor.apply();
     }
     /**
@@ -284,7 +284,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     protected void actionAlert(String call){
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        if(settings.getBoolean(TTS_SELECTION,false)) {
+        if(settings.getBoolean(TTS_SELECTION,false)) { //find the user's preference for TTS
             t1.speak(call, TextToSpeech.QUEUE_FLUSH, null, null);
         }
         new AlertDialog.Builder(MainActivity.this)
