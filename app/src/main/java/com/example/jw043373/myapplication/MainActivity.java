@@ -119,7 +119,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //INFO :: code for the ball counter
         txtBallCount = (TextView) findViewById(R.id.ball_counter_text);
         txtBallCount.setText(String.valueOf(ballCountNum));
-        //INFO :: code for the ball counter
+        
+        //INFO :: code for the outs counter
         txtOutsCount = (TextView) findViewById(R.id.outs_counter_text);
         txtOutsCount.setText(String.valueOf(outsCountNum));
 
